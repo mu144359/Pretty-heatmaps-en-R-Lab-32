@@ -1,0 +1,120 @@
+---
+title: "LAB 32 (MD)"
+author: "Selene Muñoz"
+date: "2/3/2021"
+output: html_document
+---
+
+Instalar paqueteria "pheatmap"
+
+```{r}
+install.packages("pheatmap")
+```
+
+Llamar paqueteria
+
+```{r}
+library(pheatmap)
+```
+
+Importar datos
+
+```{r}
+
+genes<-as.matrix(read.csv("heatmap_data.csv", header = T,row.names = 1))
+
+annotation_col<- read.csv("annotation_col.csv", header = T,row.names = 1)
+
+annotation_row<- read.csv("annotation_row.csv", header = T,row.names = 1)
+
+```
+
+Crear un mapa con pheatmap
+
+```{r}
+pheatmap(genes)
+```
+
+Cambiar tamaño de fuente
+
+```{r}
+pheatmap(genes, frontsize = 6)
+```
+
+Por default clustea renglones y columnas
+
+Clustear por genes - grupos similares de genes----LOS GENES ESTAN EN LOS RENGLONES
+
+```{r}
+pheatmap(genes, frontsize = 6, cluster_rows = T, cluster_cols = F)
+```
+
+Clustear por pacientes - grupos similares de pacientes--
+
+```{r}
+pheatmap(genes, frontsize = 6, cluster_rows = F, cluster_cols = T)
+```
+
+Usualmente ordena ambos
+
+```{r}
+pheatmap(genes, frontsize = 6, cluster_rows = T, cluster_cols = T)
+```
+
+Ver patrones, pero ¿que significan? Buen momento para agregar anotaciones a nuestro mapa
+
+```{r}
+pheatmap(genes, frontsize = 6, cluster_rows = T, cluster_cols = T, annotation_row = annotation_row)
+```
+
+agregar a la primera fila, ver que los genes se agrupan de acuerdo con los patrones a los que pertenecen
+
+```{r}
+pheatmap(genes, frontsize = 6, cluster_rows = T, cluster_cols = T, annotation_row = annotation_row, annotation_col = annotation_col)
+```
+
+Ahora se tiene informacion acerca del medicacmento y la condicion Grafico completo G1
+
+```{r}
+pheatmap(genes, frontsize = 6, cluster_rows = T, cluster_cols = T, annotation_row = annotation_row, annotation_col = annotation_col, treeheight_row = 0, treeheight_col = 0, main = "expresion genetica")
+```
+
+Grafico quitando clusters (ARBOLES DE AGRUPACION-DENDOGRAMAS) Tomar una pequeña muestra
+
+```{r}
+sub <- genes [c(1:5,55:60), c(1:5, 20:35, 55:60)]
+```
+
+Crear mapa con la muestra
+
+```{r}
+pheatmap(sub, frontsize = 6, cluster_rows = T, cluster_cols = T, annotation_row = annotation_row, annotation_col = annotation_col, treeheight_row = 0, treeheight_col = 0, main = "expresion genetica")
+```
+
+Con la muestra -- DESPLEGAR VALORES
+
+```{r}
+pheatmap(sub, frontsize = 6, cluster_rows = T, cluster_cols = T, annotation_row = annotation_row, annotation_col = annotation_col, treeheight_row = 0, treeheight_col = 0, main = "expresion genetica", fontsize = 8, annotation_legend = FALSE, display_numbers = TRUE, fontsize_number = 6)
+```
+
+Con color-- viridis, magma, plasma, cividis, inferno
+
+```{r}
+install.packages("viridis")
+
+library(viridis)
+
+pheatmap(sub, frontsize = 6, cluster_rows = T, cluster_cols = T, annotation_row = annotation_row, 
+         annotation_col = annotation_col, treeheight_row = 0, treeheight_col = 0, 
+         main = "expresion genetica", fontsize = 8, annotation_legend = FALSE, display_numbers = TRUE,
+         fontsize_number = 6, col = viridis_pal(option = "viridis") (6))
+```
+
+Elementos adicionales
+
+```{r}
+dist(sub)
+pheatmap(cor(sub))
+trans <- t(sub)
+pheatmap(cor(trans))
+```
